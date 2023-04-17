@@ -1,6 +1,5 @@
 package it.svil.controller.security.model;
 
-import it.svil.controller.security.model.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class User implements UserDetails {
+public class MyUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +26,14 @@ public class User implements UserDetails {
 
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "name"))
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -37,10 +42,9 @@ public class User implements UserDetails {
 
         roles.forEach(
                 role -> authorities.add(
-                        new SimpleGrantedAuthority(role.getRole())
+                        new SimpleGrantedAuthority(role.getName())
                 )
         );
-        System.out.println("I rouli di " + getUsername() + " sono " + roles);
         return authorities;
     }
 

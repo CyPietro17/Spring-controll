@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:insert="fragments :: head"/>
+<body>
+<div th:replace="fragments :: header"/>
+
+<div class="container">
+  <h2 style="text-align: center"><span th:object="${student}" th:text="${student.first_name}"></span> <span th:object="${student}" th:text="${student.last_name}"></span></h2>
+  <hr>
+</div>
+
+<div th:switch="${students}">
+  <h2 th:case="${#lists.isEmpty(students)}">Il corso <span th:object="${course}" th:text="${course.name_course}"></span> <span th:object="${course}" th:text="${course.description}"></span> non è ancora stato seguito da nessun studente!</h2>
+  <div th:case="*">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="table-success">
+        <th style="text-align: center">Nome e Cognome</th>
+        <th style="text-align: center">Email</th>
+        <th style="text-align: center">Data di Nascita</th>
+        <th style="text-align: center">Indirizzo</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="student: ${students}">
+        <td>
+          <span th:text="${student.first_name}"></span>
+          <span th:text="${student.last_name}"></span>
+        </td>
+        <td th:text="${student.email}"></td>
+        <td th:text="${#dates.format(student.birth_date, 'dd MMMM yyyy')}"></td>
+        <td th:text="${student.address}"></td>
+        <!--                <td style="text-align: center">-->
+        <!--                    <button type="button" class="btn btn-outline-primary btn-sm"><a-->
+        <!--                            style="text-decoration: none; color: black;"-->
+        <!--                            th:href="@{/students/unsubscribe/{c_id}(c_id=${course.id})}">Disiscrivi</a></button>-->
+        <!--                </td>-->
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--<button type="button"><a th:href="/student/subscribe/{id}(id=${student.id}}">Iscrizioni</a></button>-->
+
+<footer th:insert="fragments :: footer"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:insert="fragments :: head"/>
+<body>
+<div th:replace="fragments :: header"/>
+<div class="container">
+  <h2 style="text-align: center">Nuovo corso</h2>
+  <hr>
+</div>
+<div class="d-flex justify-content-center">
+  <form method="post" th:action="@{/courses/add}" th:object="${course}" class="row g-3">
+    <div class="form-floating mb-3">
+      <input th:field="*{name_course}" type="text" class="form-control" id="floatingInput"
+             placeholder="Nome corso">
+      <label for="floatingInput">Nome corso</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input th:field="*{description}" type="text" class="form-control" id="floatingInput"
+             placeholder="Descrizione">
+      <label for="floatingInput">Descrizione</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input th:field="*{cfu}" type="number" class="form-control" id="floatingInput" placeholder="cfu">
+      <label for="floatingInput">CFU</label>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-success btn-lg">
+        Conferma nuovo Corso
+      </button>
+    </div>
+  </form>
+</div>
+
+<footer th:insert="fragments :: footer"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 package it.svil.controller.course;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.svil.controller.student.Student;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,7 +22,7 @@ public class Course {
 
     private Byte cfu;
 
-    @ManyToMany(mappedBy = "courses", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "courses", cascade = CascadeType.PERSIST)
     @JsonBackReference
-    private List<Student> studentList;
+    private List<Student> studentList = new ArrayList<>();
 }

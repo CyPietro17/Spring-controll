@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:insert="fragments :: head"/>
+<body>
+<div th:replace="fragments :: header"/>
+
+<div class="container">
+  <h2 style="text-align: center"><span th:object="${student}" th:text="${student.first_name}"></span> <span th:object="${student}" th:text="${student.last_name}"></span></h2>
+  <hr>
+</div>
+
+<div th:switch="${#arrays.length(courses)}">
+  <div th:case="0">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="table-success">
+        <th style="text-align: center">Nome Corso</th>
+        <th style="text-align: center">Descrizione</th>
+        <th style="text-align: center">CFU</th>
+        <th style="text-align: center">Azioni</th>
+      </tr>
+      </thead>
+    </table>
+    <h3 style="text-align: center;">Non ci sono corsi da seguire!<span></span></h3>
+  </div>
+  <div th:case="*">
+    <table class="table table-bordered">
+      <thead>
+      <tr class="table-success">
+        <th style="text-align: center">Nome Corso</th>
+        <th style="text-align: center">Descrizione</th>
+        <th style="text-align: center">CFU</th>
+        <th style="text-align: center">Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="course: ${courses}">
+        <td th:text="${course.name_course}"></td>
+        <td th:text="${course.description}"></td>
+        <td th:text="${course.cfu}"></td>
+        <td style="text-align: center">
+
+          <span th:object="${user}" th:if="${user.username != 'admin'}">
+                        <span th:if="${#arrays.length(user.roles) == 2}">
+                            <button type="button" class="btn btn-outline-success btn-sm"><a
+                                    style="text-decoration: none; color: black;"
+                                    th:href="@{/students/subscribe/{c_id}(c_id=${course.id})}">Seguito</a></button>
+                        </span>
+                        <span th:if="${#arrays.length(user.roles) == 1}">
+                        <button type="button" class="btn btn-outline-success btn-sm"
+                                onclick="err()">
+                            <a style="text-decoration: none; color: black;">Elimina</a></button>
+                        </span>
+                    </span>
+          <span th:object="${user}" th:if="${user.username == 'admin'}">
+                        <button type="button" class="btn btn-outline-success btn-sm"><a
+                                style="text-decoration: none; color: black;"
+                                th:href="@{/students/subscribe/{c_id}(c_id=${course.id})}">Seguito</a></button>
+          </span>
+
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer th:insert="fragments :: footer"/>
+<script>
+  function err() {
+    alert("Non hai i permessi per eseguire quest'azione");
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous"></script>
+</body>
+</html>

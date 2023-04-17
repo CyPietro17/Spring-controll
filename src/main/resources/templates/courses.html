@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:insert="fragments :: head"/>
+<body>
+  <div th:replace="fragments :: header"/>
+  <div class="container">
+  <h2 style="text-align: center">Corsi</h2>
+  <hr>
+  </div>
+  <div th:switch="${#arrays.length(courses)}">
+    <div th:case="0">
+      <table class="table table-bordered">
+        <thead>
+        <tr class="table-success">
+          <th style="text-align: center; width: 25%">Nome</th>
+          <th style="text-align: center; width: 25%">Descrizione</th>
+          <th style="text-align: center; width: 25%">CFU</th>
+          <th style="text-align: center; width: 25%">Azioni</th>
+        </tr>
+        </thead>
+      </table>
+      <h3 style="text-align: center">Non ci sono corsi!</h3>
+    </div>
+    <div th:case="*">
+      <table class="table table-bordered">
+        <thead>
+        <tr class="table-success">
+          <th style="text-align: center;">Nome</th>
+          <th style="text-align: center;">Descrizione</th>
+          <th style="text-align: center;">CFU</th>
+          <th style="text-align: center;">Azioni</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="course: ${courses}">
+          <td th:text="${course.name_course}"></td>
+          <td th:text="${course.description}"></td>
+          <td th:text="${course.cfu}"></td>
+          <td style="text-align: center">
+
+            <span th:object="${user}" th:if="${user.username != 'admin'}">
+                        <span th:if="${#arrays.length(user.roles) == 2}">
+                            <button type="button" class="btn btn-outline-danger btn-sm"><a
+                                    style="text-decoration: none; color: black;"
+                                    th:href="@{/courses/delete/{id}(id=${course.id})}">Elimina</a></button>
+                        </span>
+                        <span th:if="${#arrays.length(user.roles) == 1}">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                onclick="err()">
+                            <a style="text-decoration: none; color: black;">Elimina</a></button>
+                        </span>
+                    </span>
+            <span th:object="${user}" th:if="${user.username == 'admin'}">
+                        <button type="button" class="btn btn-outline-danger btn-sm"><a
+                                style="text-decoration: none; color: black;"
+                                th:href="@{/courses/delete/{id}(id=${course.id})}">Elimina</a></button>
+            </span>
+
+            <button type="button" class="btn btn-outline-warning btn-sm"><a
+                    style="text-decoration: none; color: black;"
+                    th:href="@{/courses/updateCourse/{id}(id=${course.id})}">Modifica</a></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer th:insert="fragments :: footer"/>
+  <script>
+    function err() {
+      alert("Non sei autorizzato ad eseguire quest'azione");
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+          integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+          crossorigin="anonymous"></script>
+</body>
+</html>

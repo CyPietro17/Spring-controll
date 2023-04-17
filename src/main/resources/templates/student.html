@@ -1,59 +1,94 @@
 <!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Student</title>
-    <link rel="icon" type="image/x-icon" href="https://www.clipartmax.com/png/small/117-1171017_spring-logo-spring-framework-logo.png">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-          crossorigin="anonymous">
-</head>
-    <body>
-    <div>
-        <header>
-            <p>Sei connesso come: <span th:text="${user.username}"></span></p>
-            <button style="float:right; margin: 20px; display: inline-block;" type="button" class="btn btn-success btn-sm"><a style="text-decoration: none; color: white;" th:href="@{/logout}">logout</a></button>
-        </header>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:insert="fragments :: head"/>
+<body>
+<div th:replace="fragments :: header"/>
+<div class="container">
+<h2 style="text-align: center">Studenti</h2>
+<hr>
+</div>
+<div th:switch="${#arrays.length(students)}">
+    <div th:case="0">
+        <table class="table table-bordered">
+            <thead>
+            <tr class="table-success">
+                <th style="text-align: center">Nome e Cognome</th>
+                <th style="text-align: center">Email</th>
+                <th style="text-align: center">Data di Nascita</th>
+                <th style="text-align: center">Indirizzo</th>
+                <th style="text-align: center">Corsi</th>
+                <th style="text-align: center">Azioni</th>
+            </tr>
+            </thead>
+        </table>
+        <h3 style="text-align: center">Non ci sono sudenti!</h3>
     </div>
+    <div th:case="*">
+        <table class="table table-bordered">
+            <thead>
+            <tr class="table-success">
+                <th style="text-align: center">Nome e Cognome</th>
+                <th style="text-align: center">Email</th>
+                <th style="text-align: center">Data di Nascita</th>
+                <th style="text-align: center">Indirizzo</th>
+                <th style="text-align: center">Corsi</th>
+                <th style="text-align: center">Azioni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student: ${students}">
+                <td>
+                    <span th:text="${student.first_name}"></span>
+                    <span th:text="${student.last_name}"></span>
+                </td>
+                <td th:text="${student.email}"></td>
+                <td th:text="${#dates.format(student.birth_date, 'dd MMMM yyyy')}"></td>
+                <td th:text="${student.address}"></td>
+                <td style="text-align: center">
+                    <button type="button" class="btn btn-outline-success btn-sm"><a
+                            style="text-decoration: none; color: black;"
+                            th:href="@{/students/courses/{id}(id=${student.id})}">Seguiti</a></button>
+                    <button type="button" class="btn btn-outline-primary btn-sm"><a
+                            style="text-decoration: none; color: black;"
+                            th:href="@{/students/coursesToDo/{id}(id=${student.id})}">Da Seguire</a></button>
+                </td>
+                <td style="text-align: center">
+                    <span th:object="${user}" th:if="${user.username != 'admin'}">
+                        <span th:if="${#arrays.length(user.roles) == 2}">
+                            <button type="button" class="btn btn-outline-danger btn-sm"><a
+                                    style="text-decoration: none; color: black;"
+                                    th:href="@{/students/delete/{id}(id=${student.id})}">Elimina</a></button>
+                        </span>
+                        <span th:if="${#arrays.length(user.roles) == 1}">
+                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                onclick="err()">
+                            <a style="text-decoration: none; color: black;">Elimina</a></button>
+                        </span>
+                    </span>
+                    <span th:object="${user}" th:if="${user.username == 'admin'}">
+                        <button type="button" class="btn btn-outline-danger btn-sm"><a
+                                style="text-decoration: none; color: black;"
+                                th:href="@{/students/delete/{id}(id=${student.id})}">Elimina</a></button>
+                    </span>
 
-        <h1>Studenti</h1>
+                    <button type="button" class="btn btn-outline-warning btn-sm"><a
+                            style="text-decoration: none; color: black;"
+                            th:href="@{/students/put/{id}(id=${student.id})}">Modifica</a></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer th:insert="fragments :: footer"/>
+<script>
+    function err() {
+        alert("Non hai i permessi per eseguire quest'azione");
+    }
+</script>
 
-        <div th:switch="${students}">
-            <h2 th:case="null">Non ci sono studenti!</h2>
-            <div th:case="*">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr class="table-success">
-                            <th style="text-align: center">Nome e Cognome</th>
-                            <th style="text-align: center">Email</th>
-                            <th style="text-align: center">Nascita</th>
-                            <th style="text-align: center">Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="student: ${students}">
-                            <td>
-                                <span th:text="${student.first_name}"></span>
-                                <span th:text="${student.last_name}"></span>
-                            </td>
-                            <td th:text="${student.email}"></td>
-                            <td th:text="${#dates.format(student.birth_date, 'dd-MMMM-yyyy')}"></td>
-                            <td style="text-align: center">
-                                <button type="button" class="btn btn-outline-danger btn-sm"><a style="text-decoration: none; color: black;" th:href="@{/students/delete/{id}(id=${student.id})}">Elimina</a></button>
-                                <button type="button" class="btn btn-outline-warning btn-sm"><a style="text-decoration: none; color: black;" th:href="@{/students/put/{id}(id=${student.id})}">Modifica</a></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button style="margin: 5px" type="button" class="btn btn-success"><a style="text-decoration: none; color: white;" th:href="@{/students/add}">Aggiungi studente</a></button>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-                integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-                crossorigin="anonymous"></script>
-    </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous"></script>
+</body>
 </html>

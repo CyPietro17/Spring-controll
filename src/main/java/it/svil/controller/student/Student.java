@@ -1,7 +1,5 @@
 package it.svil.controller.student;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import it.svil.controller.assignment.Assignment;
 import it.svil.controller.course.Course;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -31,8 +29,7 @@ public class Student {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth_date;
 
-    @OneToMany(mappedBy = "student")
-    private List<Assignment> assignments = new ArrayList<>();
+    private String address;
 
     @ManyToMany
     @JoinTable( name = "students_course",

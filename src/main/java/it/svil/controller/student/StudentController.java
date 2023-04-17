@@ -31,11 +31,6 @@ public class StudentController {
         return studentService.addStudent(student);
     }
 
-//    @DeleteMapping("/{id}")
-//    public List<Student> deleteById(@PathVariable Long id) {
-//        return studentService.delete(id);
-//    }
-
     @PutMapping("/{id}")
     public Student putStudent(@PathVariable Long id, @RequestBody Student student) {
         return studentService.putStudent(id, student);

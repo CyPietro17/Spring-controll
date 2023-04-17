@@ -23,8 +23,9 @@ public class CourseController {
         return courseService.findAllCourse();
     }
 
-    @PostMapping("/{course_id}")
-    public Course addCourse(@PathVariable Long course_id, @RequestBody List<Long> students_id) {
-        return courseService.addCourseToStudent(course_id, students_id);
-    }
+//    TODO
+//    @PostMapping("/{course_id}")
+//    public Course addCourse(@PathVariable Long course_id, @RequestBody Long student_id) {
+//        return courseService.addCourseToStudent(course_id, student_id);
+//    }
 }

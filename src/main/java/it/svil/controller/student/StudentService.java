@@ -1,10 +1,11 @@
 package it.svil.controller.student;
 
-import it.svil.controller.assignment.Assignment;
 import it.svil.controller.course.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,13 +16,6 @@ public class StudentService {
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-    }
-
-    public Student addStudent(Student student) {
-        for(Assignment assignment: student.getAssignments()){
-            assignment.setStudent(student);
-        }
-        return studentRepository.save(student);
     }
 
     public Optional<Student> getById(Long id) {
@@ -37,8 +31,22 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
+
     public Iterable<Student> delete(Long id) {
         studentRepository.deleteById(id);
         return this.getStudents();
+    }
+
+    public Student addStudent(Student student){
+        return studentRepository.save(student);
+    }
+
+    public Iterable<Course> coursesToDo(Student student, Iterable<Course> courses) {
+        List<Course> coursesList = new ArrayList<>();
+        for(Course c : courses){
+            if(!student.getCourses().contains(c))
+                coursesList.add(c);
+        }
+        return coursesList;
     }
 }
